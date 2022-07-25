@@ -1,16 +1,24 @@
-# **_holbertonschool-machine_learning._**
+# **_0x00. Linear Algebra._**
+ 
+ ![]()
+ 
+ ## **_Resources._** 👌
 
-![cisfun](https://user-images.githubusercontent.com/85587286/160668243-e21e731e-555c-4392-b0e7-5fc6f0e5241a.\
-jpg)
+### **_Read or watch:_  👈
+
+>> * []()
+>> * []()
+>> * []()
+>> * []()
+>> * []()
 
 
-## **_Built with:_**  🛠️
+## **_Built with:_** 🛠️
 
->> * Ubuntu 20.4 LTS
->>
+>> * Ubuntu 20.04 LTS
+>> 
 >> * Emacs editor
->>
+>> 
+>> * gcc, using the options `-Wall` `-Werror` `-Wextra` `-pedantic` `-std=gnu89` 🏁
+>> 
 >> * Betty style
->>
->> * `gcc`, using the options `-Wall` `-Werror` `-Wextra` `-pedantic` `-std=gnu89`  🏁
-
