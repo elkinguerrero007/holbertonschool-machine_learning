@@ -2,17 +2,26 @@
  
  ![]()
  
-### **_Resources._** 👌
+## **_Resources._** 👌
 
  
 
-## **_Read or watch:_  👈
+### **_Read or watch:_  👈
 
 >> * []()
 >> * []()
 >> * []()
 >> * []()
 >> * []()
+
+### **_References:_  👈
+
+>> * []()
+>> * []()
+>> * []()
+>> * []()
+>> * []()
+
 
 
 ## **_Built with:_** 🛠️
@@ -21,6 +30,6 @@
 >> 
 >> * Emacs editor
 >> 
->> * gcc, using the options `-Wall` `-Werror` `-Wextra` `-pedantic` `-std=gnu89` 🏁
+>> * numpy (version 1.19.2) 🏁
 >> 
->> * Betty style
+>> * pycodestyle (version 2.6)
