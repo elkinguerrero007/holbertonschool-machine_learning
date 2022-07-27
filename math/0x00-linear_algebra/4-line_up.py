@@ -1,15 +1,12 @@
 #!/usr/bin/env python3
-"""function add"""
+""" first"""
 
 
 def add_arrays(arr1, arr2):
-    """
-    add matrix
-    """
-    sum = []
-    try:
-        for i in range(len(arr1)):
-            sum.append(arr1[i] + arr2[i])
-    except Exception:
+    """add two arrays"""
+    sum_arr = []
+    if len(arr1) is not len(arr2):
         return None
-    return 
+    for i in range(0, len(arr1)):
+        sum_arr.append(arr1[i] + arr2[i])
+    return sum_arr
