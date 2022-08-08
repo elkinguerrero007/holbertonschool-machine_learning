@@ -40,9 +40,8 @@
 
 >> *  π = 3.1415926536
 >> * e = 2.7182818285
->> * x-special/nautilus-clipboard
-cut
-file:///home/elkin/Escritorio/aproxy.png
+>> * ![5e71204ca545072e8766](https://user-images.githubusercontent.com/85587286/183453358-bec96e04-cbb2-4d26-88b3-a7c72f64dca0.gif)
+
 
 
  
