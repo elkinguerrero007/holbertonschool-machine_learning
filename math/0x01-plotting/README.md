@@ -1,4 +1,6 @@
-[matrix-c](https://holbertonintranet.s3.amazonaws.com/uploads/medias/2018/9/54daaf81421a9b894688.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIARDDGGGOU5BHMTQX4%2F20220725%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20220725T184931Z&X-Amz-Expires=86400&X-Amz-SignedHeaders=host&X-Amz-Signature=6c8270ecf7f5b8ee72b8cf8ff875a8e6683f950e53f96f219df37b000ecb70ef.pnp)
+# Plotting
+![GIF004-small](https://user-images.githubusercontent.com/85587286/183437162-52ae65a8-4979-4454-b1be-179616e9a4fd.gif)
+
 ## **_Resources._** 👌
 
  
