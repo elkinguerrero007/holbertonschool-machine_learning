@@ -30,6 +30,11 @@
 >> * [numpy.ndarray.transpose](https://intranet.hbtn.io/rltoken/iv73fN04gTbpeV_XcIIaPQ)
 >> * [numpy.matmul](https://intranet.hbtn.io/rltoken/MbHJEqjwavimnL8HRtaYCA)
 
+### ** _Installing numpy 1.19.2, scipy 1.6.2, and pycodestyle 2.6_**  👈
+>> * pip install --user numpy==1.19.2
+>> * pip install --user scipy==1.6.2
+>> * pip install --user pycodestyle==2.6
+>> * To check that all have been successfully downloaded, use pip list
 
 
 ## **_Built with:_** 🛠️
