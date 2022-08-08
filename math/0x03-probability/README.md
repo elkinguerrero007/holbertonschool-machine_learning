@@ -1,6 +1,7 @@
 # *_Probability._*
+![probability](https://user-images.githubusercontent.com/85587286/183449129-7b019c00-72c4-4a5a-931b-67bd6d5b2838.gif)
+
  
-![matrix-c]()
 ## **_Resources._** 👌 
 
  
