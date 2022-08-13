@@ -1,5 +1,9 @@
 # *_0x00-Classificacion_reading_*
- 
+
+![not_hot_dog_app](https://user-images.githubusercontent.com/85587286/184461134-8ca66a70-5a3d-4e9b-b377-20fd159a2f60.jpeg)
+
+
+
 ## **_Resources._** 👌 
 
  
