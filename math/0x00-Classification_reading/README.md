@@ -1,6 +1,5 @@
-# *_0x00. Linear Algebra._*
+# *_0x00-Classificacion_reading_*
  
-![matrix-c]()
 ## **_Resources._** 👌 
 
  
