@@ -1,108 +1,92 @@
 #!/usr/bin/env python3
-"""
-Binary Classification
-"""
+"""Neural Network Module"""
+
+
 import numpy as np
 
 
-class NeuralNetwork:
-    """
-    define the NeuralNetwork class
-    """
+class NeuralNetwork():
+    """Neural Network Class"""
 
     def __init__(self, nx, nodes):
-        """initialize variables and methods"""
-        if not isinstance(nx, int):
-            raise TypeError('nx must be an integer')
+        if type(nx) is not int:
+            raise TypeError("nx must be an integer")
         if nx < 1:
-            raise ValueError('nx must be a positive integer')
-        if not isinstance(nodes, int):
-            raise TypeError('nodes must be an integer')
+            raise ValueError("nx must be a positive integer")
+        if type(nodes) is not int:
+            raise TypeError("nodes must be an integer")
         if nodes < 1:
-            raise ValueError('nodes must be a positive integer')
-        self.nx = nx
-        self.nodes = nodes
-        self.__W1 = np.random.normal(loc=0.0, scale=1.0, size=(nodes, nx))
-        # self.__W1 = np.random.randn(nodes, nx)
-        self.__b1 = np.zeros(nodes).reshape(nodes, 1)
+            raise ValueError("nodes must be a positive integer")
+        self.__W1 = np.random.normal(size=(nodes, nx))
+        self.__b1 = np.zeros([nodes, 1])
         self.__A1 = 0
-        self.__W2 = np.random.normal(
-            loc=0.0, scale=1.0, size=nodes).reshape(1, nodes)
-        # self.__W2 = np.random.randn(nodes).reshape(1, nodes)
+        self.__W2 = np.random.normal(size=(1, nodes))
         self.__b2 = 0
         self.__A2 = 0
 
     @property
     def W1(self):
-        """getter for W1"""
+        """getter for weigths_1 vector"""
         return self.__W1
 
     @property
     def b1(self):
-        """getter for b1"""
+        """getter for biases_1 vector"""
         return self.__b1
 
     @property
     def A1(self):
-        """getter for A1"""
+        """getter for activation value A_1"""
         return self.__A1
 
     @property
     def W2(self):
-        """getter for W2"""
+        """getter for weigths_2 vector"""
         return self.__W2
 
     @property
     def b2(self):
-        """getter for b2"""
+        """getter for biases_2"""
         return self.__b2
 
     @property
     def A2(self):
-        """getter for A2"""
+        """getter for activation value A_2"""
         return self.__A2
 
     def forward_prop(self, X):
-        """forward propagation function"""
-        Z1 = np.matmul(self.W1, X) + self.b1
-        self.__A1 = self.sigmoid(Z1)
-        Z2 = np.matmul(self.W2, self.A1) + self.b2
-        self.__A2 = self.sigmoid(Z2)
-        return self.A1, self.A2
-
-    def sigmoid(self, Y):
-        """define the sigmoid activation function"""
-        return 1 / (1 + np.exp(-1 * Y))
+        """Forward Propogation for binary class neural net"""
+        z1 = np.matmul(self.__W1, X) + self.b1
+        self.__A1 = 1/(1 + np.exp(-z1))
+        z2 = np.matmul(self.__W2, self.__A1) + self.b2
+        self.__A2 = 1/(1 + np.exp(-z2))
+        return self.__A1, self.__A2
 
     def cost(self, Y, A):
-        """define the cost function"""
-        m = Y.shape[1]
-        return (-1 / m) * np.sum(
-            Y * np.log(A) + (1 - Y) * (np.log(1.0000001 - A)))
+        """Logistic Regression Cost Function"""
+        mth = -1/A.shape[1]
+        costs = (Y * np.log(A)) + ((1 - Y) * np.log(1.0000001 - A))
+        return np.sum(costs) * mth
 
     def evaluate(self, X, Y):
-        """function that evaluates the nn's predictions"""
-        A1, A2 = self.forward_prop(X)
-        cost = self.cost(Y, A2)
-        return np.where(A2 >= 0.5, 1, 0), cost
+        """Evaluates the predictions made and the cost"""
+        A1, predictions = self.forward_prop(X)
+        cost = self.cost(Y, predictions)
+        eval_bool = predictions >= 0.5
+        evaluation = eval_bool.astype(int)
+        return evaluation, cost
 
     def gradient_descent(self, X, Y, A1, A2, alpha=0.05):
-        """function that calculates one pass of gradient descent"""
+        """Gradient descent method for neural network"""
+        mth = 1/A1.shape[1]
         dZ2 = A2 - Y
-        m = Y.shape[1]
-        dW2 = (1 / m) * np.matmul(dZ2, A1.T)
-        db2 = (1 / m) * np.sum(dZ2, axis=1, keepdims=True)
-        # Z1 = np.matmul(self.W1, X) + self.b1
-        # dZ1 = np.multiply(np.matmul(self.W2.T, dZ2), self.sigmoid_prime(Z1))
-        dZ1 = np.multiply(np.matmul(self.W2.T, dZ2), (A1 * (1 - A1)))
-        dW1 = (1 / m) * np.matmul(dZ1, X.T)
-        db1 = (1 / m) * np.sum(dZ1, axis=1, keepdims=True)
-        self.__W2 -= alpha * dW2
-        self.__b2 -= alpha * db2
-        self.__W1 -= alpha * dW1
-        self.__b1 -= alpha * db1
-
-    # def sigmoid_prime(self, Y):
-    #     """define the derivative of the sigmoid activation function"""
-    #     return self.sigmoid(Y) * (1 - self.sigmoid(Y))
-Footer
+        dW2 = np.matmul(dZ2, A1.T) * mth
+        dB2 = mth * np.sum(dZ2, axis=1)
+        dsigmoid = A1 * (1 - A1)
+        dZ1 = np.matmul(self.__W2.T, dZ2) * dsigmoid
+        dW1 = mth * np.matmul(dZ1, X.T)
+        dB1 = mth * np.sum(dZ1, axis=1, keepdims=True)
+        self.__W2 = self.__W2 - (alpha * dW2)
+        self.__b2 = self.__b2 - (alpha * dB2)
+        self.__W1 = self.__W1 - (alpha * dW1)
+        self.__b1 = self.__b1 - (alpha * dB1)
