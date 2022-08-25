@@ -1,16 +1,12 @@
 #!/usr/bin/env python3
-"""
-Module to create a placeholder
-"""
+"""Placeholders with tensorflow"""
+
+
 import tensorflow as tf
 
 
 def create_placeholders(nx, classes):
-    """
-    a function that create placeholders
-    :param nx: the number of feature columns in our data
-    :param classes: the number of classes in our classifier
-    :return: placeholders named x and y, respectively
-    """
-    return tf.placeholder(float, shape=[None, nx], name='x'), tf.placeholder(
-        float, shape=[None, classes], name='y')
+    """placeholder func"""
+    x = tf.placeholder(name="x", dtype=tf.float32, shape=[None, nx])
+    y = tf.placeholder(name="y", dtype=tf.float32, shape=[None, classes])
+    return x, y
