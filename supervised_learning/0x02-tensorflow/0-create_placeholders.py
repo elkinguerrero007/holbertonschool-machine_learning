@@ -1,12 +1,25 @@
 #!/usr/bin/env python3
-"""Placeholders with tensorflow"""
+"""Create a placeholders"""
 
-
-import tensorflow as tf
+import tensorflow.compat.v1 as tf
 
 
 def create_placeholders(nx, classes):
-    """placeholder func"""
-    x = tf.placeholder(name="x", dtype=tf.float32, shape=[None, nx])
-    y = tf.placeholder(name="y", dtype=tf.float32, shape=[None, classes])
-    return x, y
+    """
+    ...
+    Parameters
+    ----------
+    nx : int
+        The number of feature columns in our data
+    classes : int
+        The number of classes in our classifier
+    Returns
+    _______
+    placeholders : tuple
+        Placeholders named x and y, respectively
+    """
+    placeholders = (
+        tf.placeholder(tf.float32, name="x", shape=(None, nx)),
+        tf.placeholder(tf.float32, name="y", shape=(None, classes))
+    )
+    return placeholders
