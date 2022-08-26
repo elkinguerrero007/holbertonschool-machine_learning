@@ -1,22 +1,26 @@
 #!/usr/bin/env python3
-"""
-7-evaluate.py
-Module that defines a function called evaluate
-"""
+"""7. Evaluate"""
 
-import tensorflow as tf
+import tensorflow.compat.v1 as tf
 
 
 def evaluate(X, Y, save_path):
-    """Function that evaluates the output of a neural network"""
-    new_path = save_path + ".meta"
-    saver = tf.train.import_meta_graph(new_path)
+    """
+    X is a numpy.ndarray containing the input data to evaluate
+    Y is a numpy.ndarray containing the one-hot labels for X
+    save_path is the location to load the model from
+    Returns: the network’s prediction, accuracy, and loss, respectively
+    """
     with tf.Session() as sess:
+        saver = tf.train.import_meta_graph(save_path + '.meta')
         saver.restore(sess, save_path)
-        x = tf.get_collection("x")[0]
-        y = tf.get_collection("y")[0]
-        y_pred = tf.get_collection("y_pred")
-        loss = tf.get_collection("loss")
-        accuracy = tf.get_collection("accuracy")
-        pred, a_val, l_val = sess.run([y_pred, accuracy, loss], {x: X, y: Y})
-        return pred[0], a_val[0], l_val[0]
+        x = tf.get_collection('x')[0]
+        y = tf.get_collection('y')[0]
+        y_pred = tf.get_collection('y_pred')[0]
+        accuracy = tf.get_collection('accuracy')[0]
+        loss = tf.get_collection('loss')[0]
+        prediction = sess.run(y_pred, feed_dict={x: X, y: Y})
+        acc = sess.run(accuracy, feed_dict={x: X, y: Y})
+        los = sess.run(loss, feed_dict={x: X, y: Y})
+        sess.close()
+    return prediction, acc, los
