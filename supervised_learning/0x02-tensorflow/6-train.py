@@ -5,20 +5,8 @@
 import tensorflow.compat.v1 as tf
 
 
-def create_train_op(loss, alpha):
-    """" Function to train a model with tensorflow
-    ...
-    Parameters
-    __________
-    loss : Tensor
-        The loss of the network’s prediction
-    alpha : Tensor
-        The learning rate
-    ...
-    Return
-    ______
-    accuracy : Tensor
-        Operation that trains the network using gradient descent
-    """
-    return tf.train.GradientDescentOptimizer(learning_rate=alpha)\
-        .minimize(loss)
+def train(X_train, Y_train, X_valid,
+          Y_valid, layer_sizes, activations, alpha,
+          iterations, save_path="/tmp/model.ckpt"):
+    """" Function to train a model with tensorflow"""
+    pass
