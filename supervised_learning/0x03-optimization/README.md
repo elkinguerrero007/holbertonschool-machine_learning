@@ -10,8 +10,8 @@
 
 >> * [Hyperparameter (machine learning)](https://intranet.hbtn.io/rltoken/1QBGvpFW16wWkdzpbPQ3DQ)
 >> * [Feature scaling](https://intranet.hbtn.io/rltoken/w-mu-1FTMnCw_bo51x1H1w)
->> * [Why, How and When to Scale your Features](Why, How and When to Scale your Features)
->> * [Normalizing your data](Normalizing your data)
+>> * [Why, How and When to Scale your Features](https://intranet.hbtn.io/rltoken/GGzAGiwPp84A1_Oz9KL3tQ)
+>> * [Normalizing your data](https://intranet.hbtn.io/rltoken/qAJARRbV2HbG-xSTK_Ioxw)
 >> * [Moving average](https://intranet.hbtn.io/rltoken/_Na-3oh6JT9YqhWnxE5cRg)
 >> * [An overview of gradient descent optimization algorithms](https://intranet.hbtn.io/rltoken/-TMwJwWHSavWMohuQ5yQvA)
 >> * [A Gentle Introduction to Mini-Batch Gradient Descent and How to Configure Batch Size](https://intranet.hbtn.io/rltoken/-Bpr2w5FmPvMnmn-EHW6Rw)
