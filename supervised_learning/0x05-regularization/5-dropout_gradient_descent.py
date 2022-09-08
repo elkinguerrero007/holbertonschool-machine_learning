@@ -1,38 +1,49 @@
 #!/usr/bin/env python3
 """
-Module used to
+Gradient Descent with Dropout
 """
-
 import numpy as np
 
 
 def dropout_gradient_descent(Y, weights, cache, alpha, keep_prob, L):
     """
-    creates a tensorflow layer that includes L2 regularization
+    Dropout regularization using gradient descent
     Args:
-        - prev is a tensor containing the output of the previous layer
-        - n is the number of nodes the new layer should contain
-        - activation is the activation funct that should be used on the layer
-        - lambtha is the L2 regularization paramet
-    Returns:
-        the output of the new layer
+        Y: (classes, m) that contains the correct labels for the data
+        classes is the number of classes
+        m is the number of data points
+        weights: is a dictionary of the weights and biases of the DNN
+        cache: is a dictionary of the outputs and dropout
+            masks of each layer of the neural network
+        alpha: is the learning rate
+        keep_prob is the probability that a node will be kept
+        L is the number of layers of the network
     """
-
-    weights2 = weights.copy()
     m = Y.shape[1]
-
-    for neural_lyr in reversed(range(L)):
-        n = neural_lyr + 1
-        if (n == L):
-            dz = cache["A" + str(n)] - Y
-            dw = (np.matmul(cache["A" + str(neural_lyr)], dz.T) / m).T
+    cweights = weights.copy()
+    for i in range(L, 0, -1):
+        if i == L:
+            # Current layer error, derivate cost respect to Z
+            curr_layer_err = cache['A'+str(i)] - Y
         else:
-            dz1 = np.matmul(weights2["W" + str(n + 1)].T, current_dz)
-            dz2 = 1 - cache["A" + str(n)]**2
-            dz = dz1 * dz2 * cache['D' + str(n)] / keep_prob
-            dw = np.matmul(dz, cache["A" + str(neural_lyr)].T) / m
+            factor = np.dot(cweights['W'+str(i+1)].T, prev_layer_err)
+            # Current layer error
+            curr_layer_err = factor * derv_tanh(cache['A' + str(i)])
+            # aplying mask to current layer error
+            curr_layer_err *= cache['D'+str(i)] / keep_prob
+        # derivate cost respect to weight
+        derv_cost_w = np.dot(curr_layer_err, cache['A' + str(i-1)].T) / m
+        # derivate cost respect to bias
+        derv_cost_b = np.sum(curr_layer_err, axis=1, keepdims=True) / m
+        # Update weights and bias
+        weights['W'+str(i)] = cweights['W'+str(i)] - alpha * derv_cost_w
+        weights['b'+str(i)] = cweights['b'+str(i)] - alpha * derv_cost_b
+        # Update layer error
+        prev_layer_err = curr_layer_err
 
-        db = np.sum(dz, axis=1, keepdims=True) / m
-        weights["W" + str(n)] -= (alpha * dw)
-        weights["b" + str(n)] -= alpha * db
-        current_dz = dz
+
+def derv_tanh(A):
+    """
+    Derivate of tanH
+    """
+    return 1 - (A**2)
