@@ -1,17 +1,22 @@
 #!/usr/bin/env python3
 """
-Calculates the cost of a neural network with L2 regularization using tensorflow
+3. Create a Layer with L2 Regularization
 """
-import tensorflow as tf
+import tensorflow.compat.v1 as tf
 
 
-def l2_reg_cost(cost):
+def l2_reg_create_layer(prev, n, activation, lambtha):
     """
-    a function that calculates the cost of a NN with L2 regularization with
-    tensorflow
-    :param cost: a tensor containing the cost of the network without L2
-    regularization
-    :return: a tensor containing the cost of the network accounting for L2
-    regularization
+    Creates a tensorflow layer that includes L2 reg:
+    prev: tensor containing the output of the previous layer
+    n: number of nodes the new layer should contain
+    activation: activation function that should be used
+    lambtha: L2 regularization parameter
+    Returns: the output of the new layer
     """
-    return cost + tf.losses.get_regularization_losses()
+    l2_reg = tf.keras.regularizers.L2(lambtha)
+    weight = tf.keras.initializers.VarianceScaling(scale=2.0, mode="fan_avg")
+    layer = tf.layers.Dense(units=n, activation=activation,
+                            kernel_initializer=weight,
+                            kernel_regularizer=l2_reg)(prev)
+    return layer
