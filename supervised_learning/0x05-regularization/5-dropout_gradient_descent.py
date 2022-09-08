@@ -1,45 +1,42 @@
 #!/usr/bin/env python3
 """
-Conducts gradient descent using Dropout:
+Gradient Descent with Dropout
 """
 import numpy as np
 
 
 def dropout_gradient_descent(Y, weights, cache, alpha, keep_prob, L):
-    """
-    a function that conducts gradient descent using dropout
-    :param Y: one-hot numpy.ndarray of shape (classes, m) that contains the
-    correct labels for the data
-        classes is the number of classes
-        m is the number of data points
-    :param weights: a dictionary of the weights and biases of the neural
-    network
-    :param cache: a dictionary of the outputs and dropout masks of each layer
-    :param alpha: the learning rate
-    :param keep_prob: the probability that a node will be kept
-    :param L: the number of layers in the network
-    :return: no return
-    """
-    m = Y.shape[1]
-    for i in reversed(range(L)):
-        # create keys to access weights(W), biases(b) and store in cache
-        key_w = 'W' + str(i + 1)
-        key_b = 'b' + str(i + 1)
-        key_cache = 'A' + str(i + 1)
-        key_cache_dw = 'A' + str(i)
-        # Activation
-        A = cache[key_cache]
-        A_dw = cache[key_cache_dw]
-        if i == L - 1:
-            dz = A - Y
-            W = weights[key_w]
+    """function that updates the weights and biases of a nn using
+    gradient descent with Dropout"""
+    weights_copy = weights.copy()
+    for i in range(L, 0, -1):
+        m = Y.shape[1]
+        if i != L:
+            # all layers use a tanh activation, except last
+            # introduce call to tanh_prime method
+            dZi = np.multiply(np.matmul(
+                weights_copy['W' + str(i + 1)].T, dZi
+            ), tanh_prime(cache['A' + str(i)]))
+            # pass dZi through same dropout mask as that
+            # saved in cache during forward_prop
+            # dropout mask applied to hidden layers only
+            # regularize and normalize by keep_prob
+            dZi *= cache['D' + str(i)]
+            dZi /= keep_prob
         else:
-            da = 1 - (A * A)
-            dz = np.matmul(W.T, dz)
-            dz = dz * da * cache["D{}".format(i + 1)]
-            dz = dz / keep_prob
-            W = weights[key_w]
-        dw = np.matmul(A_dw, dz.T) / m
-        db = np.sum(dz, axis=1, keepdims=True) / m
-        weights[key_w] = weights[key_w] - alpha * dw.T
-        weights[key_b] = weights[key_b] - alpha * db
+            # last layer uses a softmax activation
+            dZi = cache['A' + str(i)] - Y
+        dWi = np.matmul(dZi, cache['A' + str(i - 1)].T) / m
+        dbi = np.sum(dZi, axis=1, keepdims=True) / m
+        weights['W' + str(i)] = weights_copy['W' + str(i)] - alpha * dWi
+        weights['b' + str(i)] = weights_copy['b' + str(i)] - alpha * dbi
+
+
+def tanh(Y):
+    """define the tanh activation function"""
+    return np.tanh(Y)
+
+
+def tanh_prime(Y):
+    """define the derivative of the activation function tanh"""
+    return 1 - Y ** 2
