@@ -1,24 +1,29 @@
 #!/usr/bin/env python3
 """
-Determines if you should stop gradient descent early
+Early Stopping
 """
+import numpy as np
 
 
 def early_stopping(cost, opt_cost, threshold, patience, count):
     """
-    a function that determines if you should stop gradient descent early
-    :param cost: the current validation cost of the neural network
-    :param opt_cost: the lowest recorded validation cost of the neural network
-    :param threshold: the threshold used for early stopping
-    :param patience: the patience count used for early stopping
-    :param count: the count of how long the threshold has not been met
-    :return: a boolean of whether the network should be stopped early,
-    followed by the updated count
+       Determines stop gradient descent early.
+       Args:
+         cost: Current validation cost
+         opt_cost: Lowest recorded validation cost
+         threshold: Threshold used for early stopping
+         patience: Patience count used for early stopping
+         count: How long threshold has not been met
+       Returns:
+         Boolean on whether network should be updated
+           followed by update count.
     """
-    if (opt_cost - cost) > threshold:
+    cost_step = opt_cost - cost
+    if cost_step > threshold:
         count = 0
     else:
         count += 1
-    if count == patience:
+    if count < patience:
+        return False, count
+    else:
         return True, count
-    return False, count
