@@ -1,7 +1,9 @@
 # Tensorflow
 
+![tensorflow](https://user-images.githubusercontent.com/85587286/189540621-8ad400b9-305e-475b-baf7-85707551d2ab.gif)
 
-![Tensorflow](https://user-images.githubusercontent.com/85587286/186533664-5411787c-a79a-4d81-a7d1-17582dc05db8.gif)
+
+
 
 ## **_Resources._** 👌 
 
