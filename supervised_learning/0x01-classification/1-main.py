@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-
+"""elkin"""
 import numpy as np
 
 Neuron = __import__('1-neuron').Neuron
