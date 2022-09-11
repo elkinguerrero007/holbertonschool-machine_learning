@@ -1,6 +1,7 @@
 # *_Regularization_*
 
 
+![1 rrjJaesIzo46XTT3y-SYXA](https://user-images.githubusercontent.com/85587286/189514038-b464391b-0a81-4e14-84b2-f49e1b00e348.gif)
 
 ## **_Resources._** 👌 
 
