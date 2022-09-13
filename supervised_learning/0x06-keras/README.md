@@ -15,7 +15,7 @@
 >> * [Keras vs. tf.keras: What’s the difference in TensorFlow 2.0?](https://intranet.hbtn.io/rltoken/5ydJAynv2tvxboAY6l0kyg)
 >> * [Hierarchical Data Format](https://intranet.hbtn.io/rltoken/9wXncIBTP1NMQZ-djKipUw)
 
-##· **_References_**  👈
+## **_References_**  👈
 
 >> * [tf.keras](https://intranet.hbtn.io/rltoken/8d4MOKiPD_uAQsZMESHAEg)
 >> * [tf.keras.models](https://intranet.hbtn.io/rltoken/kxyXWw_TGTZSU-zL-mOplg)
