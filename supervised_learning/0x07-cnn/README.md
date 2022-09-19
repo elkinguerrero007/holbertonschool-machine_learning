@@ -26,7 +26,7 @@
 >> * [CNN Example](https://intranet.hbtn.io/rltoken/JXJg5MMzZ4JEbM8Wv7oemw)
 >> * [Gradient-Based Learning Applied to Document Recognition (LeNet-5)](https://intranet.hbtn.io/rltoken/R84em95wWIF6PEEu4WG7HA)
 
-##· **_References_**  👈
+## **_References_**  👈
 
 >> * [tf.layers.Conv2D](https://intranet.hbtn.io/rltoken/P8iTl5HSNm0y5LQq2L4vcw)
 >> * [tf.keras.layers.Conv2D](https://intranet.hbtn.io/rltoken/eMO39JERmcFTwvkZ62NsHw)
