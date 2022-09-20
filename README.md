@@ -20,3 +20,5 @@
 >> * [Error Analysis](https://github.com/elkinguerrero007/holbertonschool-machine_learning/tree/main/supervised_learning/0x04-error_analysis)
 >> * [Regularization](https://github.com/elkinguerrero007/holbertonschool-machine_learning/tree/main/supervised_learning/0x05-regularization)
 >> * [Keras](https://github.com/elkinguerrero007/holbertonschool-machine_learning/tree/main/supervised_learning/0x06-keras)
+>> * [Convolutional Neural Networks](https://github.com/elkinguerrero007/holbertonschool-machine_learning/tree/main/supervised_learning/0x07-cnn)
+>> *[]()
