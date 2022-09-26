@@ -1,5 +1,7 @@
 # Deep Convolutional Architectures
 
+![convolutional](https://user-images.githubusercontent.com/85587286/192379751-58720628-5eef-470c-b0e4-4f775ffc77ab.gif)
+
 
 ## **_Resources._** 👌 
 
