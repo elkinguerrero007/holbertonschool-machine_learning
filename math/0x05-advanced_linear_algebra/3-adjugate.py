@@ -1,100 +1,159 @@
 #!/usr/bin/env python3
-"""
-Calculates the adjugate of a matrix
-"""
+"""Advanced Linear Algebra"""
 
 
 def determinant(matrix):
-    """
-    a funciton that calculates the determinant of a matrix
-    :param matrix: a list of lists whose determinant should be calculated
-    :return: the determinant of matrix
-    """
-    if type(matrix) is not list:
-        raise TypeError("matrix must be a list of lists")
+    """function that calculates the determinant of a matrix"""
 
-    if matrix == [[]]:
+    err_1 = "matrix must be a list of lists"
+    if not isinstance(matrix, list):
+        raise TypeError(err_1)
+    if not all([isinstance(element, list) for element in matrix]):
+        raise TypeError(err_1)
+    if len(matrix) == 0:
+        raise TypeError(err_1)
+
+    # Infer the number of rows/columns in matrix
+    height = len(matrix)
+    width = len(matrix[0])
+
+    # Account for edge case [[]] (0x0 matrix)
+    if height == 1 and width == 0:
         return 1
 
-    for i in range(len(matrix)):
-        if len(matrix) != len(matrix[i]):
-            raise ValueError("matrix must be a square matrix")
-        if type(matrix[i]) is not list or not len(matrix[i]):
-            raise TypeError("matrix must be a list of lists")
+    err_2 = "matrix must be a square matrix"
+    if height != width:
+        raise ValueError(err_2)
+    if not all([len(matrix[i]) == width for i in range(1, height)]):
+        raise ValueError(err_2)
 
-    if len(matrix) == 1 and len(matrix[0]) == 1:
+    # Account for edge case [[num]] (1x1 matrix)
+    if height == 1 and width == 1:
         return matrix[0][0]
 
-    if len(matrix) == 2 and len(matrix[0]) == 2:
-        return (matrix[0][0] * matrix[1][1]) - (matrix[0][1] * matrix[1][0])
+    # Exit condition: 2x2 submatrix reached
+    if height == 2 and width == 2:
+        sub_det = matrix[0][0] * matrix[1][1] - matrix[0][1] * matrix[1][0]
+        return sub_det
 
-    first_row = matrix[0]
-    determ = 0
-    cof = 1
-    for i in range(len(matrix[0])):
-        next_matrix = [x[:] for x in matrix]
-        del next_matrix[0]
-        for mat in next_matrix:
-            del mat[i]
-        determ += first_row[i] * determinant(next_matrix) * cof
-        cof = cof * -1
+    det = 0
+    # Iterate through the column indices
+    for col_index in range(width):
+        # Slice the submatrix (remove first row)
+        submat = matrix[1:]
+        new_height = len(submat)
+        # Iterate through the row indices of submat
+        # and remove the column value at col_index
+        for row_index in range(new_height):
+            submat[row_index] = (submat[row_index][0: col_index] +
+                                 submat[row_index][col_index + 1:])
+        # Handle +/- sign
+        sign = (-1) ** (col_index % 2)
+        # This (ternary) also works:
+        # sign = (-1) if (col_index % 2) != 0 else 1
+        # Recursive call
+        sub_det = determinant(submat)
+        det += sign * matrix[0][col_index] * sub_det
 
-    return determ
+    return det
+
+
+def minor(matrix):
+    """function that calculates the minor matrix of a matrix"""
+
+    err_1 = "matrix must be a list of lists"
+    if not isinstance(matrix, list):
+        raise TypeError(err_1)
+    if not all([isinstance(element, list) for element in matrix]):
+        raise TypeError(err_1)
+    if len(matrix) == 0:
+        raise TypeError(err_1)
+
+    # Infer the number of rows/columns in matrix
+    height = len(matrix)
+    width = len(matrix[0])
+
+    err_2 = "matrix must be a non-empty square matrix"
+    if height != width:
+        raise ValueError(err_2)
+    if not all([len(matrix[i]) == width for i in range(1, height)]):
+        raise ValueError(err_2)
+    # Account for edge case [[]] (0x0 matrix)
+    if height == 1 and width == 0:
+        raise ValueError(err_2)
+
+    # Account for edge case [[num]] (1x1 matrix)
+    if height == 1 and width == 1:
+        return [[1]]
+
+    # Initialize a "minor" list of zeros
+    minor = [[0 for j in range(width)] for i in range(height)]
+    # print("minor:", minor)
+
+    # Iterate through the column indices
+    for col_index in range(width):
+        # Make a deepcopy of matrix (reinitialization)
+        # via list comprehension
+        submat = [sublist[:] for sublist in matrix]
+        # Iterate through the row indices
+        # and remove the column value at col_index
+        for row_index in range(height):
+            submat[row_index] = (submat[row_index][0: col_index] +
+                                 submat[row_index][col_index + 1:])
+            # print("submat_1:", submat)
+        for row_index in range(height):
+            # Slice the submatrix (remove "row_index"th row)
+            sub_submat = (submat[0: row_index] + submat[row_index + 1:])
+            # print("submat_2:", sub_submat)
+            # Evaluate the minor and append it to the "minor" list
+            minor[row_index][col_index] = determinant(sub_submat)
+
+    return minor
 
 
 def cofactor(matrix):
-    """
-    a function that calculates the cofactor of a matrix
-    :param matrix: matrix is a list of lists whose minor matrix should be
-    calculated
-    :return: the cofactor matrix of a matrix
-    """
-    if type(matrix) is not list or not len(matrix):
-        raise TypeError("matrix must be a list of lists")
+    """function that calculates the cofactor matrix of a matrix"""
 
-    if matrix == [[]]:
-        raise ValueError("matrix must be a non-empty square matrix")
+    # Create the matrix of minors from matrix
+    minors = minor(matrix)
 
-    for i in range(len(matrix)):
-        if len(matrix) != len(matrix[i]):
-            raise ValueError("matrix must be a non-empty square matrix")
-        if type(matrix[i]) is not list or not len(matrix[i]):
-            raise TypeError("matrix must be a list of lists")
+    # Infer the number of rows/columns in minors
+    height = len(minors)
+    width = len(minors[0])
 
-    if len(matrix) == 1:
-        return [[1]]
+    # Initialize the "cofactor" list with "minors"
+    # Make a deepcopy via list comprehension
+    cofactor = [sublist[:] for sublist in minors]
+    # Build the actual "cofactor" list with "sign"
+    for col_index in range(width):
+        for row_index in range(height):
+            # Handle +/- sign
+            sign = (-1) if (
+                ((col_index % 2) != 0 and (row_index % 2) == 0) or
+                ((col_index % 2) == 0 and (row_index % 2) != 0)
+            ) else 1
+            # Apply "sign"
+            cofactor[row_index][col_index] = (sign *
+                                              minors[row_index][col_index])
 
-    list_minor = []
-    for i in range(len(matrix)):
-        inner = []
-        if i % 2 == 0:
-            cof = 1
-        else:
-            cof = -1
-        for j in range(len(matrix[0])):
-            next_matrix = [x[:] for x in matrix]
-            del next_matrix[i]
-            for mat in next_matrix:
-                del mat[j]
-            determ = determinant(next_matrix) * cof
-            inner.append(determ)
-            cof = cof * -1
-        list_minor.append(inner)
-
-    return list_minor
+    return cofactor
 
 
 def adjugate(matrix):
-    """
-    a function that calculates the adjugate
-    :param matrix: a list of lists whose adjugate matrix should be calculated
-    :return: the adjugate of a matrix
-    """
-    adj = cofactor(matrix)
-    transpose = []
-    for j in range(len(adj[0])):
-        inner = []
-        for i in range(len(adj)):
-            inner.append(adj[i][j])
-        transpose.append(inner)
-    return transpose
+    """function that calculates the adjugate matrix of a matrix"""
+
+    # Create the matrix of cofactors from matrix
+    cofactors = cofactor(matrix)
+
+    # Infer the number of rows/columns in cofactors
+    height = len(cofactors)
+    width = len(cofactors[0])
+
+    # Initialize an "adjugate" list of zeros
+    adjugate = [[0 for j in range(width)] for i in range(height)]
+    # Transpose to form the actual "adjugate" list
+    for col_index in range(width):
+        for row_index in range(height):
+            adjugate[row_index][col_index] = cofactors[col_index][row_index]
+
+    return adjugate
