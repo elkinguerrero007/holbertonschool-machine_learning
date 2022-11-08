@@ -95,4 +95,3 @@ class MultiNormal():
         x_mu = x - self.mean
         dot = np.dot(np.dot(x_mu.T, covI), x_mu)
         return float(Px*np.exp((-1/2)*dot))
-    
