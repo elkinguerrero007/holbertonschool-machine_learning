@@ -1,6 +1,9 @@
 # 0x00. Dimensionality Reduction
 
 
+![Dimensionality_reduction](https://user-images.githubusercontent.com/85587286/201239825-1fc0565a-c419-4a58-ba50-76693f0f636f.jpeg)
+
+
 ## **_Resources._** 👌 
 
  
