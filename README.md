@@ -21,4 +21,6 @@
 >> * [Regularization](https://github.com/elkinguerrero007/holbertonschool-machine_learning/tree/main/supervised_learning/0x05-regularization)
 >> * [Keras](https://github.com/elkinguerrero007/holbertonschool-machine_learning/tree/main/supervised_learning/0x06-keras)
 >> * [Convolutional Neural Networks](https://github.com/elkinguerrero007/holbertonschool-machine_learning/tree/main/supervised_learning/0x07-cnn)
->> *[]()
+>> *[ 0x05. Advanced Linear Algebra](https://github.com/elkinguerrero007/holbertonschool-machine_learning/tree/main/math/0x05-advanced_linear_algebra)
+>> * [0x06. Multivariate Probability](https://github.com/elkinguerrero007/holbertonschool-machine_learning/tree/main/math)
+>> * [0x07-bayesian_prob](https://github.com/elkinguerrero007/holbertonschool-machine_learning/tree/main/math/0x07-bayesian_prob)
