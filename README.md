@@ -29,6 +29,6 @@
 >> * [ 0x09. Transfer Learning](https://github.com/elkinguerrero007/holbertonschool-machine_learning/tree/main/supervised_learning/0x08-deep_cnns)
 >> * [0x09. Transfer Learning ](https://github.com/elkinguerrero007/holbertonschool-machine_learning/tree/main/supervised_learning/0x09-transfer_learning)
 
-# *_unsupervised_learning_*
+# *_Unsupervised_learning_*
 
 >> * [0x00-dimensionality_reduction](https://github.com/elkinguerrero007/holbertonschool-machine_learning/tree/main/unsupervised_learning/0x00-dimensionality_reduction)
