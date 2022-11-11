@@ -25,9 +25,8 @@
 >> * [Regularization](https://github.com/elkinguerrero007/holbertonschool-machine_learning/tree/main/supervised_learning/0x05-regularization)
 >> * [Keras](https://github.com/elkinguerrero007/holbertonschool-machine_learning/tree/main/supervised_learning/0x06-keras)
 >> * [Convolutional Neural Networks](https://github.com/elkinguerrero007/holbertonschool-machine_learning/tree/main/supervised_learning/0x07-cnn)
->> * [ 0x08. Deep Convolutional Architectures]()
->> * [ 0x09. Transfer Learning](https://github.com/elkinguerrero007/holbertonschool-machine_learning/tree/main/supervised_learning/0x08-deep_cnns)
->> * [0x09. Transfer Learning ](https://github.com/elkinguerrero007/holbertonschool-machine_learning/tree/main/supervised_learning/0x09-transfer_learning)
+>> * [ 0x08. Deep Convolutional Architectures](https://github.com/elkinguerrero007/holbertonschool-machine_learning/tree/main/supervised_learning/0x08-deep_cnns)
+>> * [ 0x09. Transfer Learning](https://github.com/elkinguerrero007/holbertonschool-machine_learning/tree/main/supervised_learning/0x09-transfer_learning)
 
 # *_Unsupervised_learning_*
 
