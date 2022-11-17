@@ -1,50 +1,50 @@
 #!/usr/bin/env python3
-"""[summary]
-Returns:
-    [type]: [description]
+"""
+module 9-BIC
+contains function BIC
 """
 import numpy as np
 expectation_maximization = __import__('8-EM').expectation_maximization
 
 
 def BIC(X, kmin=1, kmax=None, iterations=1000, tol=1e-5, verbose=False):
-    """[summary]
-    Args:
-        X ([type]): [description]
-        kmin (int, optional): [description]. Defaults to 1.
-        kmax ([type], optional): [description]. Defaults to None.
-        iterations (int, optional): [description]. Defaults to 1000.
-        tol ([type], optional): [description]. Defaults to 1e-5.
-        verbose (bool, optional): [description]. Defaults to False.
-    Returns:
-        [type]: [description]
     """
-    if not isinstance(X, np.ndarray) or len(X.shape) != 2:
+    Finds the best number of clusters for a GMM using
+    the Bayesian Information Criterion
+    """
+    if type(X) is not np.ndarray or len(X.shape) is not 2:
         return None, None, None, None
-    if type(kmin) != int or kmin <= 0 or kmin >= X.shape[0]:
+    n, d = X.shape
+    if type(kmin) is not int or kmin <= 0 or kmin >= n:
         return None, None, None, None
-    if type(kmax) != int or kmax <= 0 or kmax >= X.shape[0]:
+    if type(kmax) is not int or kmax <= 0 or kmax >= n:
         return None, None, None, None
     if kmin >= kmax:
         return None, None, None, None
-    if type(iterations) != int or iterations <= 0:
+    if type(iterations) is not int or iterations < 1:
         return None, None, None, None
-    if type(tol) != float or tol <= 0:
+    if type(tol) is not float or tol <= 0:
         return None, None, None, None
-    if type(verbose) != bool:
+    if type(verbose) is not bool:
         return None, None, None, None
-    n, d = X.shape
-    k_r, result, l_b, b = [], [], [], []
+
+    b, results, ks, l_b = [], [], [], []
+
     for k in range(kmin, kmax + 1):
-        pi, m, S, g, like = expectation_maximization(
-            X, k, iterations, tol, verbose)
-        k_r.append(k)
-        result.append((pi, m, S))
-        l_b.append(like)
+        ks.append(k)
+        pi, m, S, _, lklhd = expectation_maximization(X,
+                                                      k,
+                                                      iterations,
+                                                      tol,
+                                                      verbose)
+        results.append((pi, m, S))
+        l_b.append(lklhd)
         p = (k * d * (d + 1) / 2) + (d * k) + k - 1
-        bic = p * np.log(n) - 2 * like
+        bic = p * np.log(n) - 2 * lklhd
         b.append(bic)
-    b = np.array(b)
-    best = np.argmin(b)
+
     l_b = np.array(l_b)
-    return k_r[best], result[best], l_b[best], b[best]
+    b = np.array(b)
+    i = np.argmin(b)
+
+    return ks[i], results[i], l_b, b
