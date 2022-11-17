@@ -1,83 +1,77 @@
 #!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 """
-Module contains function that finds the best
-number of clusters for a Gaussian Mixture Model
-using the Bayesian Information criterion.
+Clustering
 """
-
-
 import numpy as np
+expectation_maximization = __import__('8-EM').expectation_maximization
 
 
 def BIC(X, kmin=1, kmax=None, iterations=1000, tol=1e-5, verbose=False):
     """
-    Finds the best number of clusters for a Gaussian Mixture Model
-    using the Bayesian Information criterion.
-    Args:
-        X: numpy.ndarray - (n, d) Data set.
-        kmin: Positive integer, Minimum number of clusters to check for.
-        kmax: Positive integer, Maximum number of clusters to check for.
-            If kmax is None, kmax == number of points.
-        iterations: Positive integer, maximum number of iterations
-        for the algorithm.
-        tol: Non-negative float containing tolerance of the log likelihood,
-        used to determine early stopping i.e. if the difference is less
-        than or equal to tol you should stop the algorithm.
-        verbose: Boolean that determines if function should print information
-        about the algorithm.
-    Return: best_k, best_result, l, b, or None, None, None, None on failure.
-        best_k: Best value for k based on its BIC.
-        best_result: Tuple containing pi, m, S.
-            pi: numpy.ndarray - (k,) Cluster priors for the best number
-            of clusters.
-            m: numpy.ndarray - (k, d) Centroid means for the best number
-            of clusters.
-            S: numpy.ndarray - (k, d, d) Covariance matrices for the best
-            number of clusters.
-        l: numpy.ndarray - (kmax - kmin + 1) Log likelihood for each cluster
-        size tested.
-        b: numpy.ndarray - (kmax - kmin + 1) Bayesian Information Criterion
-        value for each cluster size tested.
+    Function that finds the best number of clusters for a GMM using
+    the Bayesian Information Criterion
+    Arguments:
+     - X is a numpy.ndarray of shape (n, d) containing the data set
+     - kmin is a positive integer containing the minimum number of clusters
+        to check for (inclusive)
+     - kmax is a positive integer containing the maximum number of clusters
+        to check for (inclusive)
+     - iterations is a positive integer containing the maximum number of
+        iterations for the EM algorithm
+     - tol is a non-negative float containing the tolerance for
+        the EM algorithm
+     - verbose is a boolean that determines if the EM algorithm should print
+        information to the standard output
+    Returns:
+     best_k, best_result, l, b, or None, None, None, None on failure
+        - best_k is the best value for k based on its BIC
+        - best_result is tuple containing pi, m, S
+              * pi is a numpy.ndarray of shape (k,) containing the cluster
+                priors for the best number of clusters
+              * m is a numpy.ndarray of shape (k, d) containing the centroid
+                means for the best number of clusters
+              * S is a numpy.ndarray of shape (k, d, d) containing the
+                covariance matrices for the best number of clusters
+        - l is a numpy.ndarray of shape (kmax - kmin + 1) containing the
+            log likelihood for each cluster size tested
+        - b is a numpy.ndarray of shape (kmax - kmin + 1) containing the BIC
+            value for each cluster size tested
+            Use: BIC = p * ln(n) - 2 * l
+            * p is the number of parameters required for the model
+            * n is the number of data points used to create the model
+            * l is the log likelihood of the model
     """
 
-    if type(X) is not np.ndarray or X.ndim != 2:
+    if not isinstance(X, np.ndarray) or len(X.shape) != 2:
         return None, None, None, None
-    if type(kmin) is not int or kmin <= 0:
+    if type(kmin) != int or kmin <= 0 or kmin >= X.shape[0]:
         return None, None, None, None
-    if kmax is None:
-        kmax = X.shape[0]
-    if type(kmax) is not int or kmax <= 0:
+    if type(kmax) != int or kmax <= 0 or kmax >= X.shape[0]:
         return None, None, None, None
-    if kmax <= kmin:
+    if kmin >= kmax:
         return None, None, None, None
-    if type(iterations) is not int or iterations <= 0:
+    if type(iterations) != int or iterations <= 0:
         return None, None, None, None
-    if type(tol) is not float or tol < 0:
+    if type(tol) != float or tol <= 0:
         return None, None, None, None
-    if type(verbose) is not bool:
+    if type(verbose) != bool:
         return None, None, None, None
 
-    expectation_maximization = __import__('8-EM').expectation_maximization
-    EM = expectation_maximization
-
-    Ps, Ls = [], []
     n, d = X.shape
+    k_r, result, l_b, b = [], [], [], []
 
     for k in range(kmin, kmax + 1):
+        pi, m, S, g, like = expectation_maximization(
+            X, k, iterations, tol, verbose)
+        k_r.append(k)
+        result.append((pi, m, S))
+        l_b.append(like)
+        p = (k * d * (d + 1) / 2) + (d * k) + k - 1
+        bic = p * np.log(n) - 2 * like
+        b.append(bic)
+    b = np.array(b)
+    best = np.argmin(b)
+    l_b = np.array(l_b)
 
-        Ps.append(1+(k*d)+(k*d))
-
-        Ls.append((EM(X, k, iterations, tol, verbose))[-1])
-
-    BICs = np.array(Ps)*np.log(n)-2*np.array(Ls)
-    best_k = int(np.argmin(BICs) + kmin)
-    priors, means, sigmas, _, _ = EM(X, best_k, iterations, tol, verbose)
-
-    idxs = np.argsort(priors)[::-1]
-    priors = priors[idxs]
-    means = means[idxs]
-    sigmas = sigmas[idxs, :]
-
-    best_results = (priors, means, sigmas)
-
-    return best_k, best_results, np.array(Ls), BICs
+    return k_r[best], result[best], l_b[best], b[best]
