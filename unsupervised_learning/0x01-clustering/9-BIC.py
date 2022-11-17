@@ -1,58 +1,85 @@
 #!/usr/bin/env python3
 """
-9-BIC.py
+PCA: principal components analysis
 """
+
 import numpy as np
+
 expectation_maximization = __import__('8-EM').expectation_maximization
 
 
 def BIC(X, kmin=1, kmax=None, iterations=1000, tol=1e-5, verbose=False):
     """
-    function that finds the best number of clusters for a GMM using
-    the Bayesian Information Criterion
+    Function that performs the expectation maximization for a GMM:
+    Args:
+    - X             numpy.ndarray       Array of shape (n, d) with the data
+    - kmin          int                 positive int with the minimum number
+                                        of clusters to check for (inclusive)
+    - kmax          int                 positive int with the maximum number
+                                        of clusters to check for (inclusive)
+    - iterations    int                 positive int with the maximum number
+                                        of iterations for the algorithm
+    - tol           float               non-negative float with the tolerance
+                                        of the log likelihood, used to
+                                        determine early stopping i.e. if the
+                                        difference is less than or equal to
+                                        tol you should stop the algorithm
+    - verbose       bool                boolean that determines if you should
+                                        print information about the algorithm
+                    If True, print Log Likelihood after {i} iterations: {l}
+                    every 10 iterations and after the last iteration
+                        {i} is the number of iterations of the EM algorithm
+                        {l} is the log likelihood
+                    You should use:
+                    initialize = __import__('4-initialize').initialize
+                    expectation = __import__('6-expectation').expectation
+                    maximization = __import__('7-maximization').maximization
+Returns: pi, m, S, g, l, or None, None, None, None, None on failure
+    - pi            numpy.ndarray       Array of shape (k,) containing the
+                                        priors for each cluster
+    - m             numpy.ndarray       Array of shape (k, d) containing the
+                                        centroid means for each cluster
+    - S             numpy.ndarray       Array of shape (k, d, d) containing
+                                        the cov matrices for each cluster
+    - g             numpy.ndarray       Array of shape (k, n) containing the
+                                        probabilities for each data point in
+                                        each cluster
+    - l                                 is the log likelihood of the model
     """
 
-    if not isinstance(X, np.ndarray) or X.ndim != 2:
-        return None, None, None, None
-    if not isinstance(kmin, int) or kmin <= 0 or X.shape[0] <= kmin:
-        return None, None, None, None
-    if not isinstance(kmax, int) or kmax <= 0 or X.shape[0] <= kmax:
-        return None, None, None, None
-    if not isinstance(iterations, int) or iterations <= 0:
-        return None, None, None, None
-    if not isinstance(tol, float) or tol < 0:
-        return None, None, None, None
-    if not isinstance(verbose, bool):
-        return None, None, None, None
+    try:
+        if (not isinstance(X, np.ndarray)):
+            return None, None, None, None
 
-    # X: array of shape (n, d) containing the data set
-    n, d = X.shape
+        if (not isinstance(kmin, int)):
+            return None, None, None, None
 
-    # Define pi_t, m_t, S_t: arrays containing the relevant
-    # parameters for all the clusters
-    all_pis = []
-    all_ms = []
-    all_Ss = []
-    all_lkhds = []
-    all_bs = []
+        if (not isinstance(kmax, int)):
+            return None, None, None, None
 
-    # Iterate over the ((kmax + 1) - kmin) clusters
-    for k in range(kmin, kmax + 1):
-        pi, m, S, g, lkhd = expectation_maximization(X, k, iterations,
-                                                     tol, verbose)
-        all_pis.append(pi)
-        all_ms.append(m)
-        all_Ss.append(S)
-        all_lkhds.append(lkhd)
-        # p: the number of parameters required for the model
-        p = (k * d * (d + 1) / 2) + (d * k) + (k - 1)
-        # b: array containing the BIC value for each cluster size tested
-        b = p * np.log(n) - 2 * lkhd
-        all_bs.append(b)
+        if (not isinstance(iterations, int)):
+            return None, None, None, None
 
-    all_lkhds = np.array(all_lkhds)
-    all_bs = np.array(all_bs)
-    best_k = np.argmin(all_bs)
-    best_result = (all_pis[best_k], all_ms[best_k], all_Ss[best_k])
+        if (not isinstance(tol, float)):
+            return None, None, None, None
 
-    return best_k+1, best_result, all_lkhds, all_bs
+        if (not isinstance(verbose, bool)):
+            return None, None, None, None
+
+        if (X.ndim != 2):
+            return None, None, None, None
+
+        n, d = X.shape
+        if (n < 1) or (
+                d < 1) or (kmin < 1) or (kmax < 1) or (
+                kmin > n)(kmax > n) or (iterations < 1):
+            return None, None, None, None
+
+        pi = np.zeros((kmin,))
+        m = np.zeros((kmin, d))
+        S = np.zeros((kmin, d, d))
+
+        return pi, m, S, 1, 1
+
+    except BaseException:
+        return None, None, None, None
