@@ -62,3 +62,4 @@ def BIC(X, kmin=1, kmax=None, iterations=1000, tol=1e-5, verbose=False):
         return best_k, best_result, np.array(all_li), np.array(b)
     except Exception as e:
         return None, None, None, None
+    
