@@ -1,58 +1,98 @@
 #!/usr/bin/env python3
 """
-9-BIC.py
+optimization of K using bayes in GMM
 """
+
 import numpy as np
 expectation_maximization = __import__('8-EM').expectation_maximization
 
 
 def BIC(X, kmin=1, kmax=None, iterations=1000, tol=1e-5, verbose=False):
     """
-    function that finds the best number of clusters for a GMM using
-    the Bayesian Information Criterion
+    * X is a numpy.ndarray of shape (n, d) containing the data set
+    * kmin is a positive integer containing the minimum number of clusters
+      to check for (inclusive)
+    * kmax is a positive integer containing the maximum number of clusters
+      to check for (inclusive)
+    * iterations is a positive integer containing the maximum number of
+      iterations for the EM algorithm
+    * tol is a non-negative float containing the tolerance for the EM
+      algorithm
+    * verbose is a boolean that determines if the EM algorithm should print
+      information to the standard output
+    * You may use at most 1 loop
+    Returns: best_k, best_result, l, b, or None, None, None, None on failure
+    * best_k is the best value for k based on its BIC
+    * best_result is tuple containing pi, m, S
+    * pi is a numpy.ndarray of shape (k,) containing the cluster priors for
+      the best number of clusters
+    * m is a numpy.ndarray of shape (k, d) containing the centroid means for
+      the best number of clusters
+    * S is a numpy.ndarray of shape (k, d, d) containing the covariance
+      matrices for the best number of clusters
+    * l is a numpy.ndarray of shape (kmax - kmin + 1) containing the log
+      likelihood for each cluster size tested
+    * b is a numpy.ndarray of shape (kmax - kmin + 1) containing the BIC value
+      for each cluster size tested
+    * Use: BIC = p * ln(n) - 2 * l
+    * p is the number of parameters required for the model
+    * n is the number of data points used to create the model
+    * l is the log likelihood of the model
     """
+    if type(X) is not np.ndarray or len(X.shape) != 2:
+        return (None, None, None, None)
 
-    if not isinstance(X, np.ndarray) or X.ndim != 2:
-        return None, None, None, None
-    if not isinstance(kmin, int) or kmin <= 0 or X.shape[0] <= kmin:
-        return None, None, None, None
-    if not isinstance(kmax, int) or kmax <= 0 or X.shape[0] <= kmax:
-        return None, None, None, None
-    if not isinstance(iterations, int) or iterations <= 0:
-        return None, None, None, None
-    if not isinstance(tol, float) or tol < 0:
-        return None, None, None, None
-    if not isinstance(verbose, bool):
-        return None, None, None, None
+    if type(kmin) is not int or kmin <= 0:
+        return (None, None, None, None)
 
-    # X: array of shape (n, d) containing the data set
+    if kmax is not None and type(kmax) is not int:
+        return (None, None, None, None)
+
+    if kmax is None:
+        kmax = X.shape[0]
+
+    if kmin >= kmax or kmax <= 0:
+        return (None, None, None, None)
+
+    if type(iterations) is not int or iterations <= 0:
+        return (None, None, None, None)
+
+    if type(tol) is not float or tol < 0:
+        return (None, None, None, None)
+
+    if type(verbose) is not bool:
+        return (None, None, None, None)
+
     n, d = X.shape
 
-    # Define pi_t, m_t, S_t: arrays containing the relevant
-    # parameters for all the clusters
-    all_pis = []
-    all_ms = []
-    all_Ss = []
-    all_lkhds = []
-    all_bs = []
+    all_l = np.zeros(kmax - kmin + 1)
+    all_BIC = np.zeros(kmax - kmin + 1)
+    count = 0
+    # lists to save all the results per k
+    all_pi = []
+    all_S = []
+    all_m = []
 
-    # Iterate over the ((kmax + 1) - kmin) clusters
-    for k in range(kmin, kmax + 1):
-        pi, m, S, g, lkhd = expectation_maximization(X, k, iterations,
-                                                     tol, verbose)
-        all_pis.append(pi)
-        all_ms.append(m)
-        all_Ss.append(S)
-        all_lkhds.append(lkhd)
-        # p: the number of parameters required for the model
-        p = (k * d * (d + 1) / 2) + (d * k) + (k - 1)
-        # b: array containing the BIC value for each cluster size tested
-        b = p * np.log(n) - 2 * lkhd
-        all_bs.append(b)
+    for i in range(kmin, kmax + 1):
+        pi, m, S, _, log_like = expectation_maximization(X, i, iterations,
+                                                         tol, verbose)
+        all_pi.append(pi)
+        all_m.append(m)
+        all_S.append(S)
+        all_l[count] = log_like
+        # number of parameters in GMM
+        # I got this equation here: https://www.mdpi.com/2227-7390/8/3/373/htm
+        p = (i - 1) + (i * d) + ((i * d) * (d + 1) / 2)
+        # getting BIC
+        BIC = (p) * np.log(n) - 2 * log_like
+        all_BIC[count] = BIC
+        count = count + 1
 
-    all_lkhds = np.array(all_lkhds)
-    all_bs = np.array(all_bs)
-    best_k = np.argmin(all_bs)
-    best_result = (all_pis[best_k], all_ms[best_k], all_Ss[best_k])
+    # the min BIC is the best model
+    min_BIC = np.argmin(all_BIC)
+    best_pi = all_pi[min_BIC]
+    best_m = all_m[min_BIC]
+    best_S = all_S[min_BIC]
+    best_k = kmin + min_BIC
 
-    return best_k+1, best_result, all_lkhds, all_bs
+    return [best_k, (best_pi, best_m, best_S), all_l, all_BIC]
