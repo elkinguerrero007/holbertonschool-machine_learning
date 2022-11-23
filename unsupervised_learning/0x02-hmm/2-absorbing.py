@@ -1,52 +1,47 @@
 #!/usr/bin/env python3
+"""Module for the function
 """
-File that contains the absorbing function
-"""
+
 import numpy as np
 
 
 def absorbing(P):
+    """Determines if a markov chain is absorbing
+    Args.
+        P: a square 2D numpy.ndarray of shape (n, n) representing the
+        standard transition matrix
+            -P[i, j] is the probability of transitioning from state i to
+             state j
+            -n is the number of states in the markov chain
+    Returns.
+        True if it is absorbing, or False on failure
     """
-    Function that determines if a markov chain is absorbing:
-    Argumrnts:
-        - P is a is a square 2D numpy.ndarray of shape (n, n)
-            representing the standard transition matrix
-            * P[i, j] is the probability of transitioning from
-              state i to state j.
-            * n is the number of states in the markov chain
-    Returns:
-        - True if it is absorbing, or False on failure
-    """
+
+    if type(P) is not np.ndarray or len(P.shape) != 2:
+        return False
+
+    rows, columns = P.shape
+
+    if rows != columns:
+        return False
+
+    if np.sum(P, axis=1).all() != 1:
+        return False
+
+    D = np.diagonal(P)
+
+    if np.all(D == 1):
+        return True
+
+    if not np.any(D == 1):
+        return False
+
+    count = np.count_nonzero(D == 1)
+    Q = P[count:, count:]
+    Id = np.eye(Q.shape[0])
 
     try:
-        if type(P) is not np.ndarray:
-            return False
-
-        if len(P.shape) != 2:
-            return False
-
-        if P.shape[0] != P.shape[1]:
-            return False
-
-        for elem in np.sum(P, axis=1):
-            if not np.isclose(elem, 1):
-                return False
-
-        diagonal = np.diag(P)
-
-        if (diagonal == 1).all():
+        if (np.any(np.linalg.inv(Id - Q))):
             return True
-
-        absorb = (diagonal == 1)
-
-        for row in range(len(diagonal)):
-            for col in range(len(diagonal)):
-                if P[row, col] > 0 and absorb[col]:
-                    absorb[row] = 1
-
-        if (absorb == 1).all():
-            return True
-
-        return False
-    except Exception:
+    except np.linalg.LinAlgError:
         return False
