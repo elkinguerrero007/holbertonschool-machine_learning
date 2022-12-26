@@ -1,4 +1,4 @@
-# *_Machine_Learning_*
+# *_Machine_Learning._*
 
 ![machine](https://user-images.githubusercontent.com/85587286/183440903-f0eacfba-0224-47ac-b393-e4f19d4d82d7.gif)
 
