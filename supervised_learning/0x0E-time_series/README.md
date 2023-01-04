@@ -18,11 +18,11 @@ BITSTAMP_CSV = '/content/bitstampUSD_1-min_data_2012-01-01_to_2020-04-22.csv'
 COINBASE_CSV = '/content/coinbaseUSD_1-min_data_2014-12-01_to_2019-01-09.csv'
 
 
-### # Extract dataframe from csv
+### Extract dataframe from csv
 ![4](https://user-images.githubusercontent.com/85587286/210636631-affd3628-2458-4d0e-bed8-ffb5f3641b59.png)
 
 
-#Data preprocessing
+### Data preprocessing
 We need to check the percentage of missing value per column, try to visualize dataframe. In addition the dataframe is windowed per 60 second so we need to recast for need by windowing hourly
 ![5](https://user-images.githubusercontent.com/85587286/210636639-f2a71b28-909c-4ddf-a9b8-93ac527d89ed.png)
 
