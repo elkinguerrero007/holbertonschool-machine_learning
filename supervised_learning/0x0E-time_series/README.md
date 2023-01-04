@@ -14,8 +14,8 @@
 >> * https://drive.google.com/file/d/1-2qi4aEYeMuvESgPemzWUgRhwZwmMOE8/view
 >> * https://drive.google.com/file/d/1-1k5W0hhJPCt7Kaxrw6ECsYcWxCiMdt7/view
 
-BITSTAMP_CSV = '/content/gdrive/MyDrive/Datasets/bitstampUSD_1-min_data_2012-01-01_to_2020-04-22.csv'
-COINBASE_CSV = '/content/gdrive/MyDrive/Datasets/coinbaseUSD_1-min_data_2014-12-01_to_2019-01-09.csv'
+BITSTAMP_CSV = '/content/bitstampUSD_1-min_data_2012-01-01_to_2020-04-22.csv'
+COINBASE_CSV = '/content/coinbaseUSD_1-min_data_2014-12-01_to_2019-01-09.csv'
 
 ### # Extract dataframe from csv
 ![4](https://user-images.githubusercontent.com/85587286/210636631-affd3628-2458-4d0e-bed8-ffb5f3641b59.png)
