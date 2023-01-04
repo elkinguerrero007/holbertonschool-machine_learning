@@ -7,7 +7,7 @@
 #### Dependencies
 ![2](https://user-images.githubusercontent.com/85587286/210636602-6da10401-d377-43c7-b35e-d693ceb3e3b8.png)
 
-### # Universal constant
+### Universal constant
 ![3](https://user-images.githubusercontent.com/85587286/210636619-2dd53929-2c9b-4ed6-97ca-9e43c097a177.png)
 
 >> * PS: Try to provide and fork dataset from this links
