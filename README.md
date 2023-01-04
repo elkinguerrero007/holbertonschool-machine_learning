@@ -31,3 +31,8 @@
 # *_Unsupervised_learning_*
 
 >> * [0x00-dimensionality_reduction](https://github.com/elkinguerrero007/holbertonschool-machine_learning/tree/main/unsupervised_learning/0x00-dimensionality_reduction)
+>> * [0x01-clustering](https://github.com/elkinguerrero007/holbertonschool-machine_learning/tree/main/unsupervised_learning/0x01-clustering)
+>> * [0x02-hmm](https://github.com/elkinguerrero007/holbertonschool-machine_learning/tree/main/unsupervised_learning/0x02-hmm)
+>> * [0x03-hyperparameter_tuning](https://github.com/elkinguerrero007/holbertonschool-machine_learning/tree/main/unsupervised_learning/0x03-hyperparameter_tuning)
+>> * [0x04-autoencoders](https://github.com/elkinguerrero007/holbertonschool-machine_learning/tree/main/unsupervised_learning/0x04-autoencoders)
+>> * []()
