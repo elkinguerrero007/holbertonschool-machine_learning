@@ -1,89 +1,144 @@
+
+
 #!/usr/bin/env python3
 """
-Calculates the unigram BLEU score for a sentence
+File that contains the function cumulative_bleu
 """
 import numpy as np
 
 
-def n_grams(sentence, n):
+def transform_grams(references, sentence, n):
     """
-    Creates the n-grams from sentence
-    :param sentence: a list containing the model proposed sentence
-    :param n: the size of the n-gram to use for evaluation
-    :return: the n-gram
+    Transforms references and sentence based on grams
+    Arguments:
+        - references is a list of reference translations
+            * each reference translation is a list of the words in the
+                translation
+        - sentence is a list containing the model proposed sentence
+        - n is the size of the n-gram to use for evaluation
+    Returns: the n-gram BLEU score
+        - references, sentence
     """
-    list_grams_cand = []
-    for i in range(len(sentence)):
-        last = i + n
-        begin = i
-        if last >= len(sentence) + 1:
-            break
-        aux = sentence[begin: last]
-        result = ' '.join(aux)
-        list_grams_cand.append(result)
-    return list_grams_cand
+    if n == 1:
+        return references, sentence
+
+    ngram_sentence = []
+    sentence_length = len(sentence)
+
+    for i, word in enumerate(sentence):
+        count = 0
+        w = word
+        for j in range(1, n):
+            if sentence_length > i + j:
+                w += " " + sentence[i + j]
+                count += 1
+        if count == j:
+            ngram_sentence.append(w)
+
+    ngram_references = []
+
+    for ref in references:
+        ngram_ref = []
+        ref_length = len(ref)
+
+        for i, word in enumerate(ref):
+            count = 0
+            w = word
+            for j in range(1, n):
+                if ref_length > i + j:
+                    w += " " + ref[i + j]
+                    count += 1
+            if count == j:
+                ngram_ref.append(w)
+        ngram_references.append(ngram_ref)
+
+    return ngram_references, ngram_sentence
 
 
-def ngram_bleu(references, sentence, n):
+def precision(references, sentence, n):
     """
-    Calculates the unigram BLEU score for a sentence
-    :param references: a list of reference translations
-    each reference translation is a list of the words in the translation
-    :param sentence: a list containing the model proposed sentence
-    :param n: the size of the n-gram to use for evaluation
-    :return: unigram BLEU score
+    Calculates the precision for n-gram BLEU score for a sentence
+    Arguments:
+        - references contains reference translations
+        - sentence contains the model proposed sentence
+        - n the size of the n-gram to use for evaluation
+    Returns:
+        - the precision for n-gram BLEU score
     """
-    grams = list(set(n_grams(sentence, n)))
-    len_g = len(grams)
-    reference_grams = []
-    words_dict = {}
+    ngram_references, ngram_sentence = transform_grams(
+        references, sentence, n)
+    ngram_sentence_length = len(ngram_sentence)
 
-    for reference in references:
-        list_grams = n_grams(reference, n)
-        reference_grams.append(list_grams)
+    sentence_dictionary = {word: ngram_sentence.count(word) for
+                           word in ngram_sentence}
+    references_dictionary = {}
 
-    for ref in reference_grams:
-        for word in ref:
-            if word in grams:
-                if word not in words_dict.keys():
-                    words_dict[word] = ref.count(word)
-                else:
-                    actual = ref.count(word)
-                    prev = words_dict[word]
-                    words_dict[word] = max(actual, prev)
+    for ref in ngram_references:
+        for gram in ref:
+            if references_dictionary.get(gram) is None or \
+                    references_dictionary[gram] < ref.count(gram):
+                references_dictionary[gram] = ref.count(gram)
 
-    prob = sum(words_dict.values()) / len_g
-    return prob
+    matchings = {word: 0 for word in ngram_sentence}
+
+    for ref in ngram_references:
+        for gram in matchings.keys():
+            if gram in ref:
+                matchings[gram] = sentence_dictionary[gram]
+
+    for gram in matchings.keys():
+        if references_dictionary.get(gram) is not None:
+            matchings[gram] = min(
+                references_dictionary[gram], matchings[gram])
+
+    precision = sum(matchings.values()) / ngram_sentence_length
+
+    return precision
+
+
+def brevity_penalty(references, sentence):
+    """
+    Function that calculates the brevity penalty for a sentence
+    Arguments:
+        - references is a list of reference translations
+            * each reference translation is a list of the words in the
+                translation
+        - sentence is a list containing the model proposed sentence
+    Returns: the brevity penalty for sentence
+    """
+    c = len(sentence)
+    r = 0
+    for ref in references:
+        if abs(len(ref) - c) < abs(r - c):
+            r = len(ref)
+
+    if c > r:
+        bp = 1
+    else:
+        bp = np.exp(1 - r / c)
+
+    return bp
 
 
 def cumulative_bleu(references, sentence, n):
     """
     Calculates the cumulative n-gram BLEU score for a sentence
-    :param references: a list of reference translations
-    each reference translation is a list of the words in the translation
-    :param sentence: a list containing the model proposed sentence
-    :param n: the size of the largest n-gram to use for evaluation
-    :return: the cumulative n-gram BLEU score
+    Arguments:
+        - references list of reference translations
+        - sentence contains the model proposed sentence
+        - n the size of the larget n-gram to use for evaluation
+    Returns:
+        - score the cumulative n-gram BLEU score
     """
-    prob = []
-    for i in range(1, n + 1):
-        result = ngram_bleu(references, sentence, i)
-        prob.append(result)
+    precisions = [0] * n
+    for i in range(n):
+        precisions[i] = precision(references, sentence, i + 1)
 
-    best_match_tuples = []
-    for reference in references:
-        ref_len = len(reference)
-        diff = abs(ref_len - len(sentence))
-        best_match_tuples.append((diff, ref_len))
-
-    sort_tuples = sorted(best_match_tuples, key=lambda x: x[0])
-    best_match = sort_tuples[0][1]
-
-    # Brevity penalty
-    if len(sentence) > best_match:
-        bp = 1
+    if len(precisions) > 0:
+        bp = brevity_penalty(references, sentence)
+        s = np.exp(np.sum((1 / n) * np.log(precisions)))
+        score = bp * s
     else:
-        bp = np.exp(1 - (best_match / len(sentence)))
+        score = 0
 
-    score = bp * np.exp(np.sum(np.log(prob)) / n)
     return score
