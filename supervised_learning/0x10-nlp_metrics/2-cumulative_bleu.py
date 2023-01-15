@@ -1,5 +1,3 @@
-
-
 #!/usr/bin/env python3
 """
 File that contains the function cumulative_bleu
