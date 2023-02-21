@@ -1,27 +1,37 @@
 #!/usr/bin/env python3
+"""
+display a game played by the agent trained by train.py
+"""
+
 import gym
+from tensorflow.keras import optimizers
 from rl.agents.dqn import DQNAgent
 from rl.memory import SequentialMemory
-import tensorflow.keras as K
 
-create_q_model = __import__('train').create_q_model
 AtariProcessor = __import__('train').AtariProcessor
+create_CNN_model = __import__('train').create_CNN_model
+# Frames
+WINDOW_LENGTH = 4
 
-
-if __name__ == '__main__':
-    env = gym.make("Breakout-v0")
+def playing():
+    """
+    display a game played by the agent trained by train.py
+    """
+    env = gym.make('ALE/Breakout-v5')
     env.reset()
-    num_actions = env.action_space.n
-    window = 4  # number of screenshots
-    model = create_q_model(num_actions, window)  # deep conv net
-    memory = SequentialMemory(limit=1000000, window_length=window)
+    nb_actions = env.action_space.n
+    model = create_CNN_model(nb_actions)
+    memory = SequentialMemory(limit=1000000, window_length=WINDOW_LENGTH)
     processor = AtariProcessor()
-    dqn = DQNAgent(model=model, nb_actions=num_actions,
-                   processor=processor, memory=memory)
-    dqn.compile(K.optimizers.Adam(lr=.00025), metrics=['mae'])
-
-    # load weights.
+    dqn = DQNAgent(model=model,
+                   nb_actions=nb_actions,
+                   processor=processor,
+                   memory=memory)
+    dqn.compile(optimizers.Adam(lr=0.00025),
+                metrics=['mae'])
     dqn.load_weights('policy.h5')
-
-    # evaluate algorithm for 10 episodes.
-    dqn.test(env, nb_episodes=10, visualize=True)
+    dqn.test(env,
+             nb_episodes=10,
+             visualize=True)
+if __name__ == "__main__":
+    playing()
