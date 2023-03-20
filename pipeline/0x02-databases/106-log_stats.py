@@ -1,22 +1,40 @@
 #!/usr/bin/env python3
 """
-Function that returns all students sorted by average score in MongoDB
+Improves script 34-log_stats.py by adding the top 10 of the most present IPs
+in the collection nginx of the database logs
 """
 
 
-def top_students(mongo_collection):
-    """
-    Returns all students sorted by average score
-    """
-    students = []
-    documents = mongo_collection.find()
-    for student in documents:
-        total_score = 0
-        topics = student["topics"]
-        for project in topics:
-            total_score += project["score"]
-        average_score = total_score / len(topics)
-        student["averageScore"] = average_score
-        students.append(student)
-    students = sorted(students, key=lambda i: i["averageScore"], reverse=True)
-    return students
+from pymongo import MongoClient
+
+
+if __name__ == "__main__":
+    client = MongoClient('mongodb://127.0.0.1:27017')
+    logs_coll = client.logs.nginx
+    doc_count = logs_coll.count_documents({})
+    print("{} logs".format(doc_count))
+    print("Methods:")
+    methods = ["GET", "POST", "PUT", "PATCH", "DELETE"]
+    for method in methods:
+        method_count = logs_coll.count_documents({"method": method})
+        print("\tmethod {}: {}".format(method, method_count))
+    path_count = logs_coll.count_documents(
+        {"method": "GET", "path": "/status"})
+    print("{} status check".format(path_count))
+    print("IPs:")
+    ips = logs_coll.aggregate([
+        {"$group": {"_id": "$ip", "count": {"$sum": 1}}}])
+    ips_list = []
+    for ip in ips:
+        ips_list.append(ip)
+    ips_list = sorted(ips_list, key=lambda i: i["count"], reverse=True)
+    index = 0
+    if len(ips_list) < 10:
+        limit = len(ips_list)
+    else:
+        limit = 10
+    while index < limit:
+        ip = ips_list[index]["_id"]
+        count = ips_list[index]["count"]
+        print("\t{}: {}".format(ip, count))
+        index += 1
